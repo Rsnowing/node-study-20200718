@@ -8,18 +8,15 @@ const cheerio = require("cheerio");
 const server = http.createServer((req, res) => {
     res.setHeader("content-type", "text/html;charset=utf-8");
     //    res.writeHead(300,{"content-type":"text/html;charset=utf-8"})
-    let urlObj = url.parse(req.url);
+    let urlObj = url.parse(req.url, true);  // true =>query 为对象形式
     // 作业实现分页；每页 5条数据；（选做）;
     // 接收get参数：urlObj.query;
-    // p = 1 ;perPage = 5; --->start: (p-1)*perPage perPage ; splice
-    // 1."/product"    2."/product?name=zhangsan"; 查询参：querystring
-    // /?p=3 
     if (urlObj.pathname === "/" || urlObj.pathname === "/index") {
         // 流方式；
-        // 组装html；
-        let page = urlObj.query - 0
+        let page = parseInt(urlObj.query.page) || 1
         let spliceData = (JSON.parse(JSON.stringify(data))).splice((page - 1) * 5, 5)
-        console.log(spliceData)
+        let total = JSON.parse(JSON.stringify(data)).length
+        let size = Math.ceil(total / 5)
         let str = "";
         spliceData.forEach(v => {
             str += `<li class="news">
@@ -28,7 +25,7 @@ const server = http.createServer((req, res) => {
             </a>
             <div>
                 <h3>
-                    <a href="javascript:;">${v.title}</a>
+                    <a href="/detail?id=${v.id}">${v.title}</a>
                 </h3>
                 <div class="info">
                     <span class="tips"><span>${v.from}</span></span>
@@ -42,7 +39,13 @@ const server = http.createServer((req, res) => {
         let indexData = fs.readFileSync("./views/index.html");
         let $ = cheerio.load(indexData);
         $(".news-list").html(str);
-
+        let pageHtml = `<a href="/index?page=${(page - 1) || 1}" class="prev">⌜</a>`
+        for (let i = 1; i <= size; i++) {
+            pageHtml += `<a href="/index?page=${i}">${i}</a>`
+        }
+        pageHtml += `<a href="/index?page=${page >= size ? size : page + 1}" class="next">⌝</a>`
+        $('.pagination').html(pageHtml)
+        
         res.end($.html());
     } else if (urlObj.pathname === "/detail") {
         let indexData = fs.createReadStream("./views/detail.html");

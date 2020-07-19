@@ -1,0 +1,74 @@
+doctype html
+html
+  head
+    style.
+        .h1 {
+            color: red;
+        }
+        h2 {
+            color: tomato;
+        }
+  body
+    h1(class="h1") pug模板
+    p Welcome to my super lame site.
+
+    h2 注释 多行注释
+    //- 注释 pug注释
+        多行注释
+    // 注释 html注释
+        多行注释
+
+    h2 换行文本
+    div
+        | 换行文本
+    - let str = "定义一个变量"
+    p 解析变量： #{str}
+    p 解析来自js的变量 #{data}
+
+    h2 迭代：
+    ul
+        each item,index in users
+            li 姓名是：#{item.name};年龄是：#{item.age}; 索引是：#{index}
+    - for(let i=0;i<4;i++)
+        span 我是循环出来的数据#{i}
+
+    h2 判断
+    - let num = 1
+            case num
+                when 1
+                    p num 是一
+                when 2
+                    p num 是二
+                default
+                    p num 是其他值
+
+    h2 mixin 混入
+    mixin mydiv
+        div 我是非常常用的div
+    +mydiv
+    mixin pet(name,sex)
+            p 这是一只#{name};它的性别是#{sex}
+    +pet("狗狗","公")
+    +pet("猫","母")
+
+    h2 公共模板
+    include common.pug
+
+    h2 script
+    script(type="text/javascript").
+        console.log(1111);
+
+//- extends ../common/layout
+
+//- block title
+//-     title pug
+//- block append style
+
+//- block style
+//-     link(type="text/css",rel='stylesheet',href='index.css') 
+//-     link(rel='stylesheet', href='index.css', type='text/css')
+//-     link(rel='stylesheet',href='https://res.miaocode.com/Swiper/4.0.7/css/swiper.min.css')
+//-     //- include index.css
+
+//- block content
+//-     h1(class="h1")  标题标题 

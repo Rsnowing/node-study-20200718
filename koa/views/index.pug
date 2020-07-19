@@ -1,0 +1,27 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    title 文章信息展示
+    link(rel='stylesheet', type='text/css', href='index.css')
+  body
+    .wrap
+      ul.news-list
+        each news in newsList
+            li.news
+                a(href='javascript:;')
+                    img(src=news.imgUrl, alt='')
+                div
+                    h3
+                    a(href='javascript:;') #{news.title}
+                    .info
+                    span.tips
+                        span #{news.from}
+                    span.time #{news.time}
+      .pagination
+        a.prev(href='/index?page=' + prev) ⌜
+        - for(let i = 1;i <= page; i++)
+            a(href='/index?page=' + i) #{i}
+        a.next(href='/index?page=' + next) ⌝
